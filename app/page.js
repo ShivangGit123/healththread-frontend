@@ -9,7 +9,6 @@ import RiskSection from "./components/RiskSection";
 import StatsBar from "./components/StatsBar";
 import GraphSection from "./components/GraphSection";
 
-/* Smooth spring-based page transitions */
 const pageVariants = {
   enter: (direction) => ({
     opacity: 0,
@@ -51,9 +50,9 @@ export default function Home() {
 
   const tabs = [
     { id: "summary", label: "Overview", icon: Activity },
-    { id: "ask",     label: "Ask AI",   icon: MessageSquare },
-    { id: "risk",    label: "Risks",    icon: Beaker },
-    { id: "graph",   label: "Graph",    icon: Dna },
+    { id: "ask", label: "Ask AI", icon: MessageSquare },
+    { id: "risk", label: "Risks", icon: Beaker },
+    { id: "graph", label: "Graph", icon: Dna },
   ];
 
   const switchTab = (newTab) => {
@@ -61,6 +60,15 @@ export default function Home() {
     const newIndex = TAB_ORDER.indexOf(newTab);
     setDirection(newIndex > oldIndex ? 1 : -1);
     setActiveTab(newTab);
+  };
+
+  const handleUploadSuccess = (extractedName) => {
+    // Refresh stats
+    setRefreshKey(k => k + 1);
+    // Update patient name if extracted from report
+    if (extractedName && extractedName.length > 2) {
+      setPatientName(extractedName);
+    }
   };
 
   return (
@@ -183,7 +191,10 @@ export default function Home() {
                   animate="show"
                 >
                   <motion.div variants={sidebarItem}>
-                    <UploadSection patientName={patientName} onUploadSuccess={() => setRefreshKey(k => k + 1)} />
+                    <UploadSection
+                      patientName={patientName}
+                      onUploadSuccess={handleUploadSuccess}
+                    />
                   </motion.div>
 
                   <motion.nav
@@ -200,11 +211,10 @@ export default function Home() {
                           whileHover={{ x: 3 }}
                           whileTap={{ scale: 0.97 }}
                           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                          className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative ${
-                            active
+                          className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative ${active
                               ? "text-[var(--accent)]"
                               : "text-[var(--text-secondary)] hover:text-white hover:bg-white/5"
-                          }`}
+                            }`}
                         >
                           {active && (
                             <motion.div
@@ -233,10 +243,10 @@ export default function Home() {
                       exit="exit"
                       className="bg-[var(--surface)] rounded-xl p-6"
                     >
-                      {activeTab === "summary" && <SummarySection  patientName={patientName} />}
-                      {activeTab === "ask"     && <QuestionSection patientName={patientName} />}
-                      {activeTab === "risk"    && <RiskSection     patientName={patientName} />}
-                      {activeTab === "graph"   && <GraphSection    patientName={patientName} />}
+                      {activeTab === "summary" && <SummarySection patientName={patientName} />}
+                      {activeTab === "ask" && <QuestionSection patientName={patientName} />}
+                      {activeTab === "risk" && <RiskSection patientName={patientName} />}
+                      {activeTab === "graph" && <GraphSection patientName={patientName} />}
                     </motion.div>
                   </AnimatePresence>
                 </div>
