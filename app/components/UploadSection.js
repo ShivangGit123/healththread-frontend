@@ -30,7 +30,6 @@ export default function UploadSection({ patientName, onUploadSuccess }) {
           : res.data.report_type,
       });
 
-      setTimeout(() => window.location.reload(), 2000);
       setFile(null);
       onUploadSuccess?.();
     } catch (err) {
