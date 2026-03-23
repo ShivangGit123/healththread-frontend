@@ -25,9 +25,11 @@ export default function UploadSection({ patientName, onUploadSuccess }) {
       const res = await axios.post(`${API}/upload`, formData);
       setResult({
         ...res.data,
-        report_type: res.data.report_type === "Unknown" ? "Report" : res.data.report_type,
-        summary: res.data.summary || { labs: 0, conditions: 0, medications: 0, findings: 0 }
+        report_type: res.data.report_type === "Unknown" || !res.data.report_type
+          ? "Report"
+          : res.data.report_type,
       });
+
       setTimeout(() => window.location.reload(), 2000);
       setFile(null);
       onUploadSuccess?.();
